@@ -6,7 +6,7 @@ class Jobs extends Component{
 
     return(
      <View>
-        <Text style={{color: 'red', fontSize: 20, textAlign:'center', marginBottom: 10}}>
+        <Text style={{color: 'Black', fontSize: 20, textAlign:'center', marginBottom: 10}}>
             {this.props.nome}
         </Text>
         <Image 

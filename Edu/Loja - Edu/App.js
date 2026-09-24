@@ -43,10 +43,51 @@ export default function App() {
     ];
 
     function adicionarCarrinho(produto) {
-        setCarrinho([
-            ...carrinho,
-            produto
-        ]);
+        // Verifica se o produto já está no carrinho
+        const itemExistente = carrinho.find(
+            (item) => item.produto.id === produto.id
+        );
+
+        if (itemExistente) {
+            // Se já existe, apenas aumenta a quantidade em 1
+            setCarrinho(
+                carrinho.map((item) =>
+                    item.produto.id === produto.id
+                        ? { ...item, quantidade: item.quantidade + 1 }
+                        : item
+                )
+            );
+        } else {
+            // Se não existe, adiciona um novo item com quantidade 1
+            setCarrinho([
+                ...carrinho,
+                { produto: produto, quantidade: 1 }
+            ]);
+        }
+    }
+
+    function aumentarQuantidade(idProduto) {
+        setCarrinho(
+            carrinho.map((item) =>
+                item.produto.id === idProduto
+                    ? { ...item, quantidade: item.quantidade + 1 }
+                    : item
+            )
+        );
+    }
+
+    function diminuirQuantidade(idProduto) {
+        setCarrinho(
+            carrinho.map((item) =>
+                item.produto.id === idProduto
+                    ? {
+                        ...item,
+                        // A quantidade nunca pode ficar menor que 1
+                        quantidade: Math.max(1, item.quantidade - 1)
+                    }
+                    : item
+            )
+        );
     }
 
     function finalizarCompra() {
@@ -72,7 +113,12 @@ export default function App() {
     });
 
     const total = carrinho.reduce(
-        (soma, produto) => soma + produto.preco,
+        (soma, item) => soma + item.produto.preco * item.quantidade,
+        0
+    );
+
+    const quantidadeItens = carrinho.reduce(
+        (soma, item) => soma + item.quantidade,
         0
     );
 
@@ -132,9 +178,55 @@ export default function App() {
                     </View>
                 ))
             )}
+
+            <Text style={styles.subtitulo}>
+                Carrinho
+            </Text>
+
+            {carrinho.length === 0 ? (
+                <Text style={styles.mensagem}>
+                    O carrinho está vazio.
+                </Text>
+            ) : (
+                carrinho.map((item) => (
+                    <View
+                        key={item.produto.id}
+                        style={styles.itemCarrinho}
+                    >
+                        <Text style={styles.nomeProduto}>
+                            {item.produto.nome}
+                        </Text>
+                        <Text style={styles.preco}>
+                            R$ {item.produto.preco.toFixed(2)}
+                        </Text>
+                        <Text style={styles.quantidadeTexto}>
+                            Quantidade: {item.quantidade}
+                        </Text>
+                        <View style={styles.botoesQuantidade}>
+                        <Button
+                            title="-"
+                            onPress={() =>
+                                diminuirQuantidade(item.produto.id)
+                            }
+                        />
+                            <Button
+                                title="+"
+                                onPress={() =>
+                                    aumentarQuantidade(item.produto.id)
+                                }
+                            />
+                        </View>
+                        <Text style={styles.subtotal}>
+                            Subtotal: R${' '}
+                            {(item.produto.preco * item.quantidade).toFixed(2)}
+                        </Text>
+                    </View>
+                ))
+            )}
+
             <View style={styles.carrinho}>
                 <Text style={styles.carrinhoTitulo}>
-                    Carrinho: {carrinho.length} itens
+                    Carrinho: {quantidadeItens} itens
                 </Text>
                 <Text style={styles.total}>
                     Total: R$ {total.toFixed(2)}
@@ -218,6 +310,29 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginVertical: 20,
         fontSize: 16
+    },
+
+    itemCarrinho: {
+        backgroundColor: 'white',
+        padding: 15,
+        borderRadius: 10,
+        marginBottom: 15
+    },
+
+    quantidadeTexto: {
+        fontSize: 16,
+        marginBottom: 10
+    },
+
+    botoesQuantidade: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10
+    },
+
+    subtotal: {
+        fontSize: 16,
+        fontWeight: 'bold'
     },
 
     carrinho: {

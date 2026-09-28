@@ -4,8 +4,7 @@ export default function RootLayout(){
     return(
         <Stack screenOptions={{ headerShown: true }}>
             <Stack.Screen name="index" />
-            <Stack.Screen name="tela2" />  
-            <Stack.Screen name="telaLampada" />
+            <Stack.Screen name="(tabs)" />
         </Stack>
     )
 }

@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
  
 export default function TabLayout() {
  
@@ -16,12 +16,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="config"
+        name="category"
         options={{
-          title: "Configurações",
-          tabBarLabel: "Config",
+          title: "Categorias",
+          tabBarLabel: "Categorias",
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="gear" size={24} color={color} />
+            <MaterialIcons name="category" size={24} color={color} />
           ),
         }}
       />

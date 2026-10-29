@@ -1,17 +1,18 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  button: {
-    width: 220,
-    height: 50,
-    borderRadius: 8,
-    backgroundColor: '#FBBF24',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    color: '#1C1C22',
-    fontSize: 16,
-    fontWeight: '600',
-  },
+  botao: {
+        backgroundColor: '#FFB300',
+        padding: 14,
+        borderRadius: 12,
+        alignItems: 'center',
+    },
+    botaoPressionado: {
+        backgroundColor: '#F9A825',
+    },
+    title: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#1C1C22',
+    },
 });

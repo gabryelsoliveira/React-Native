@@ -20,7 +20,7 @@ export default function ListScreen() {
     }
 
     carregarLembretes();
-  }, []);
+  }, [meusLembretes]);
 
   if (loading) {
   return (
@@ -45,10 +45,10 @@ export default function ListScreen() {
      
       <FlatList
         data={meusLembretes}
-        keyExtractor={(item) => item.lembreteId.toString()}
+        keyExtractor={(item) => item.LembreteId.toString()}
         renderItem={({ item }) => (
          
-          <LembreteItem lembrete={item} onAlternar={() => {}} onAbrir={() => {}} />
+          <LembreteItem lembrete={item} onAbrir={() => {}} />
         )}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}

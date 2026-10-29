@@ -1,9 +1,9 @@
-import { StyleSheet, Text, SafeAreaView, View, TextInput, Switch, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, TextInput, Switch} from 'react-native'
+import { useEffect, useState } from 'react'
 import { Button } from '../../components/Button/button'
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { Lembrete } from '../../types/lembrete';
-import { getLembreteById } from '../../services/lembrete';
+import { getLembreteByIdByAPI } from '../../services/lembrete';
 
 
 export default function LembreteEditScreen() {
@@ -16,23 +16,27 @@ export default function LembreteEditScreen() {
     const [status, setStatus] = useState<boolean>(false);
 
     useEffect(() => {
-        if (idLembrete) {
-            const dadosLembrete = getLembreteById(idLembrete);
-            setLembrete(dadosLembrete);
+        async function getLembreteById(idLembrete: number) {
+            if (idLembrete) {
+                const dadosLembrete = await getLembreteByIdByAPI(idLembrete);
+                setLembrete(dadosLembrete);
+            }
         }
+
+        getLembreteById(idLembrete);
     }, [idLembrete]);
 
     useEffect(() => {
         if (lembrete) {
-        setTitulo(lembrete.tituloLembrete);
-        setCorpo(lembrete.corpoLembrete);
-        setStatus(lembrete.statusLembrete);
-    }
-}, [lembrete]);
+            setTitulo(lembrete.TituloLembrete || '');
+            setCorpo(lembrete.CorpoLembrete || '');
+            setStatus(lembrete.StatusLembrete || false);
+        }
+    }, [lembrete]);
 
-return (
+    return (
     <View style={styles.container}>
-        <Stack.Screen options={{ title: lembrete?.tituloLembrete }} />
+        <Stack.Screen options={{ title: lembrete?.TituloLembrete }} />
         <View style={styles.lembreteArea}>
 
             <View style={styles.detailsArea}>

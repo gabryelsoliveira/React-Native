@@ -3,49 +3,46 @@ import { Lembrete } from "../../types/lembrete";
 
 type Props = {
     lembrete: Lembrete;
-    onAlternar: (id: number) => void;
     onAbrir: (id: number) => void;
 };
 
-export default function LembreteItem({ lembrete, onAlternar, onAbrir }: Props) {
-    const concluido = lembrete.statusLembrete;
+export default function LembreteItem({ lembrete, onAbrir }: Props) {
+    const concluido = Boolean(Number(lembrete.StatusLembrete));
 
     return (
-        <View style={[styles.card, concluido && styles.cardConcluido]}>
+        <View style={[styles.card, concluido ? styles.cardConcluido : null]}>
             <View style={styles.textos}>
                 <Pressable
-                    onPress={() => onAbrir(lembrete.lembreteId)}
+                    onPress={() => onAbrir(lembrete.LembreteId)}
                     accessibilityRole="button"
-                    accessibilityLabel={`Editar lembrete: ${lembrete.tituloLembrete}`}
+                    accessibilityLabel={`Editar lembrete: ${lembrete.TituloLembrete}`}
                 >
                     <View style={styles.topo}>
-                        <Text style={[styles.titulo, concluido && styles.riscado]}>
-                            {lembrete.tituloLembrete}
+                        <Text style={[styles.titulo, concluido ? styles.riscado : null]}>
+                            {lembrete.TituloLembrete}
                         </Text>
 
-                        <View style={[styles.selo, concluido && styles.seloConcluido]}>
-                            <Text style={[styles.seloTexto, concluido && styles.seloTextoConcluido]}>
+                        <View style={[styles.selo, concluido ? styles.seloConcluido : null]}>
+                            <Text style={[styles.seloTexto, concluido ? styles.seloTextoConcluido : null]}>
                                 {concluido ? "Concluído" : "Pendente"}
                             </Text>
                         </View>
                     </View>
 
-                    <Text style={[styles.corpo, concluido && styles.riscado]}>
-                        {lembrete.corpoLembrete}
+                    <Text style={[styles.corpo, concluido ? styles.riscado : null]}>
+                        {lembrete.CorpoLembrete}
                     </Text>
                 </Pressable>
             </View>
 
             <Switch
                 value={concluido}
-                onValueChange={() => onAlternar(lembrete.lembreteId)}
                 trackColor={{ false: "#E0D6B8", true: "#FFD54F" }}
                 thumbColor={concluido ? "#F9A825" : "#FFFDF5"}
             />
         </View>
     );
 }
-
 const styles = StyleSheet.create({
     card: {
         flexDirection: "row",

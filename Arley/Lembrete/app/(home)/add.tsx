@@ -1,7 +1,33 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Alert, Switch } from 'react-native';
+import { useState } from 'react';
+import { router } from 'expo-router';
+import { criarLembrete } from '../../services/lembrete';
+import { Lembrete } from '../../types/lembrete';
+import { Button } from '../../components/Button/button';
 
 export default function Add() {
-   
+
+    const [titulo, setTitulo] = useState<string>('');
+    const [corpo, setCorpo] = useState<string>('');
+    const [status, setStatus] = useState<boolean>(false);
+
+    async function handleLembreteAdd() {
+        console.log(titulo + "  " + corpo + "  " + status);
+        try {
+            const novoLembrete: Omit<Lembrete, 'LembreteId'> = {
+                "TituloLembrete": titulo,
+                "CorpoLembrete": corpo,
+                "StatusLembrete": status
+            };
+            await criarLembrete(novoLembrete);
+            Alert.alert('Sucesso', 'Lembrete criado com sucesso!');
+            router.replace('/(home)/list');
+        } catch (error) {
+            console.log(error);
+            Alert.alert('Erro', 'Falha ao criar lembrete.');
+        }
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.titulo}>Novo lembrete</Text>
@@ -12,6 +38,8 @@ export default function Add() {
                     style={styles.input}
                     placeholder="Ex: Pagar conta de luz"
                     placeholderTextColor="#9E9680"
+                    value={titulo}
+                    onChangeText={setTitulo}
                 />
 
                 <Text style={styles.label}>Descrição</Text>
@@ -19,13 +47,27 @@ export default function Add() {
                     style={[styles.input, styles.inputGrande]}
                     placeholder="Escreva os detalhes do lembrete"
                     placeholderTextColor="#9E9680"
+                    value={corpo}
+                    onChangeText={setCorpo}
+                    multiline
                 />
 
-                <Pressable
-                    style={({ pressed }) => [styles.botao, pressed && styles.botaoPressionado]}
-                >
-                    <Text style={styles.botaoTexto}>Salvar</Text>
-                </Pressable>
+                <View style={styles.switchRow}>
+                    <Text style={styles.label}>
+                        {status ? 'Concluído' : 'Não concluído'}
+                    </Text>
+                    <Switch
+                        value={status}
+                        onValueChange={setStatus}
+                        trackColor={{ false: '#E0D8B8', true: '#FFD54F' }}
+                        thumbColor={status ? '#FFB300' : '#F5F0DC'}
+                    />
+                </View>
+
+                <Button
+                    title="Adicionar lembrete"
+                    onPress={handleLembreteAdd}
+                />
             </View>
         </View>
     );
@@ -76,18 +118,10 @@ const styles = StyleSheet.create({
         height: 110,
         textAlignVertical: 'top',
     },
-    botao: {
-        backgroundColor: '#FFB300',
-        padding: 14,
-        borderRadius: 12,
+    switchRow: {
+        flexDirection: 'row',
         alignItems: 'center',
-    },
-    botaoPressionado: {
-        backgroundColor: '#F9A825',
-    },
-    botaoTexto: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#1C1C22',
+        justifyContent: 'space-between',
+        marginBottom: 16,
     },
 });
